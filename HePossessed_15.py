@@ -29,7 +29,7 @@ class PossessedBehavior(VillagerBehavior.VillagerBehavior):
         self.talk_turn += 1
         if self.base_info["day"] == 1:
             if self.talk_turn == 1:
-                CO_SEER = cb.comingout(self.base_info['agentIdx'], "SEER")
+                CO_SEER = cb.comingout(self.base_info['agentIdx'], "VILLAGER")
                 return CO_SEER
             if self.talk_turn == 2:
                 if len(self.COs) == 3:
