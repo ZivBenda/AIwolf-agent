@@ -136,7 +136,11 @@ class VillagerBehavior():
 
     def talk(self):
         if self.base_info["myRole"] == 'VILLAGER':
-            self.talk_turn += 1
+            if self.talk_turn == 1:
+                self.talk_turn += 1
+                return cb.comingout(self.base_info['agentIdx'], "VILLAGER")
+            else:
+                self.talk_turn += 1
         if self.talk_turn < 10:
             return cb.vote(self.vote())
         return cb.over()
@@ -416,4 +420,3 @@ class VillagerBehavior():
             self.likely_fake_divineders |= {target}
         elif target_role == "VILLAGER":
             self.likely_white_set |= {target}
-
