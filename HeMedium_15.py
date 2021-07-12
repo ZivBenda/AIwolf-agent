@@ -11,6 +11,8 @@ class MediumBehavior(VillagerBehavior.VillagerBehavior):
         super().initialize(base_info, diff_data, game_setting)
         self.result_medium = {'black': set(), 'white': set()}
         self.result_medium_new = []
+        self.result_medium_temp = self.result_medium.copy()
+        self.announced_as_medium = False
 
     def update(self, base_info, diff_data, request):
         super().update(base_info, diff_data, request)
@@ -40,13 +42,20 @@ class MediumBehavior(VillagerBehavior.VillagerBehavior):
         return None
 
     def talk(self):
-        self.talk_turn += 1
-        if self.base_info["day"] == 1 and self.talk_turn == 2:
-            return cb.comingout(self.base_info['agentIdx'], "MEDIUM")
-        elif self.result_medium_new:
+        if self.result_medium_new:
             who, result = self.result_medium_new.pop(0)
             result = "WEREWOLF" if result else "HUMAN"
-            return cb.identified(who, result)
+            return cb.estimate(who, result)
+        elif self.alive <= 10:
+            if not self.announced_as_medium and self.base_info["day"] == 3:
+                self.announced_as_medium = True
+                return cb.comingout(self.base_info['agentIdx'], "MEDIUM")
+            if len(self.result_medium_temp["black"]):
+                who, result = self.result_medium["black"].pop()
+                return cb.identified(who, result)
+            if len(self.result_medium_temp["white"]):
+                who, result = self.result_medium["white"].pop()
+                return cb.identified(who, result)
         return super().talk()
 
     def vote(self):
