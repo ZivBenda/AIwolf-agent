@@ -13,7 +13,7 @@ import HeSeer_15 as SeerBehavior_15
 import HeWerewolf_15 as WerewolfBehavior_15
 import HePossessed_15 as PossessedBehavior_15
 
-class HALUemon(object):
+class OKAMI(object):
     def __init__(self, agent_name):
         self.myname = agent_name
         self.behavior = None
@@ -112,7 +112,7 @@ class HALUemon(object):
     def finish(self):
         return self.behavior.finish()
 
-agent = HALUemon('HALU')
+agent = OKAMI('OKAMI')
 if __name__ == '__main__':
     aiwolfpy.connect_parse(agent)
 

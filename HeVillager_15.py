@@ -7,7 +7,7 @@ class VillagerBehavior():
         self.myname = agent_name
         self.todays_vote = None
         self.agent_list = agent_list
-        self.agent_name_list = ["HALU", "Camellia", "FoxuFoxu", "otsuki", "Sashimi", "wasabi", "takeda", "Tomato", \
+        self.agent_name_list = ["OKAMI", "Camellia", "FoxuFoxu", "otsuki", "Sashimi", "wasabi", "takeda", "Tomato", \
                                 "daisyo", "Udon", "J0hnDoe", "Tomo", "cube", "PaSeRi", "simipu"]
 
     def getName(self):
