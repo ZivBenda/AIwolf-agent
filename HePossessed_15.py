@@ -32,6 +32,8 @@ class PossessedBehavior(VillagerBehavior.VillagerBehavior):
                 CO_SEER = cb.comingout(self.base_info['agentIdx'], "VILLAGER")
                 return CO_SEER
             if self.talk_turn == 2:
+                return cb.request(cb.guard(self.myname))
+            if self.talk_turn == 3:
                 if len(self.COs) == 3:
                     vote_cand = self.COs - {int(self.base_info["agentIdx"])} - self.likely_fake_divineders
                     target = random.choice(list(vote_cand))
@@ -197,3 +199,4 @@ def YMBV(l, p):
             QP_parse = i + 1
             QP.add(QP_parse)
     return QP
+
