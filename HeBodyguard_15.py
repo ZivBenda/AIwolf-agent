@@ -8,6 +8,9 @@ class BodyguardBehavior(VillagerBehavior.VillagerBehavior):
         super().initialize(base_info, diff_data, game_setting)
         self.ated_players_num = 0
         self.guarded_player = 0
+        self.added_player_to_result_guard = False
+        self.number_killed_in_previous_turn = 0
+        self.number_alive_in_previous_turn = len(self.alive)
         for CO_seer in list(self.divineders - self.fake_divineders):
             if CO_seer not in self.agent_list[4]:
                 if int(self.base_info['agentIdx']) in self.result_all_divineders[CO_seer]["black"]:
@@ -20,15 +23,17 @@ class BodyguardBehavior(VillagerBehavior.VillagerBehavior):
 
     def dayStart(self):
         super().dayStart()
+        self.added_player_to_result_guard = False
+        self.number_killed_in_previous_turn = len(self.alive) - self.number_alive_in_previous_turn
+        self.number_alive_in_previous_turn = len(self.alive)
         return None
 
     def talk(self):
         self.talk_turn += 1
         if self.talk_turn == 1:
-            if 1 <= self.guarded_player <= 15:
-                if self.ated_players_num == len(self.ated_players):
-                    self.result_guard.add(self.guarded_player)
-            self.guarded_player = 0
+            if (not self.added_player_to_result_guard) and self.ated_players_num == len(self.ated_players):
+                self.result_guard.add(self.guarded_player)
+                self.added_player_to_result_guard = True
             self.ated_players_num = len(self.ated_players)
 
         return super().talk()
@@ -37,6 +42,8 @@ class BodyguardBehavior(VillagerBehavior.VillagerBehavior):
         return super().vote()
 
     def guard(self):
+        if self.number_killed_in_previous_turn == 1:
+            return self.guarded_player
         true_black = self.alive.copy()
         true_white = self.alive.copy()
         for key in self.divineders - self.fake_divineders:
