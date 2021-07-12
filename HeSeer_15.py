@@ -32,12 +32,14 @@ class SeerBehavior(VillagerBehavior.VillagerBehavior):
 
     def talk(self):
         self.talk_turn += 1
-        if self.base_info["day"] == 1 and self.talk_turn == 1:
-            return cb.comingout(self.base_info['agentIdx'], "SEER")
-        elif self.result_seer_new:
+        # if self.base_info["day"] == 1 and self.talk_turn == 1:
+        #     return cb.comingout(self.base_info['agentIdx'], "SEER")
+        # elif self.result_seer_new:
+        if self.result_seer_new:
             who, result = self.result_seer_new.pop(0)
             result = "WEREWOLF" if result else "HUMAN"
-            return cb.divined(who, result)
+            # return cb.divined(who, result)
+            return cb.estimate(who, result)
         return super().talk()
 
     def vote(self):
