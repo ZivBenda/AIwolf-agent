@@ -11,6 +11,8 @@ class SeerBehavior(VillagerBehavior.VillagerBehavior):
         super().initialize(base_info, diff_data, game_setting)
         self.result_seer = {'black': set(), 'white': set()}
         self.result_seer_new = []
+        self.last_seer_result = "HUMAN"
+        self.last_seer_target = 0
 
     def update(self, base_info, diff_data, request):
         super().update(base_info, diff_data, request)
@@ -28,14 +30,22 @@ class SeerBehavior(VillagerBehavior.VillagerBehavior):
 
     def dayStart(self):
         super().dayStart()
+        if self.result_seer_new:
+            self.last_seer_target, self.last_seer_result = self.result_seer_new.pop(0)
         return None
 
     def talk(self):
         self.talk_turn += 1
-        if self.result_seer_new:
-            who, result = self.result_seer_new.pop(0)
-            result = "WEREWOLF" if result else "HUMAN"
-            return cb.estimate(who, result)
+        if self.talk_turn == 1:
+            if self.last_seer_result == "HUMAN":
+                return cb.estimate(self.last_seer_target, self.last_seer_result)
+            elif self.last_seer_result == "WEREWOLF":
+                return cb.comingout(self.base_info['agentIdx'], "SEER")
+        if self.talk_turn == 2:
+            if self.last_seer_result == "HUMAN":
+                return cb.request(cb.guard(self.last_seer_target))
+            elif self.last_seer_result == "WEREWOLF":
+                return cb.divined(self.last_seer_target, self.last_seer_result)
         return super().talk()
 
     def vote(self):
